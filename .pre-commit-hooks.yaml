@@ -1,12 +1,6 @@
-- id: mkpasswd_yescrypt_replaces_sha512
-  name: reject SHA512 password hashes
+- id: reject_legacy_mkpasswd_hashes
+  name: Reject legacy, non-yescrypt mkpasswd hashes
   language: system
-  # Detangling copilots code here that assisted with this check:
-  # `grep -nHF "$1" "${@:2}"` searches the files for the literal string passed into the inline script as `$1`.
-  # `-n` includes line numbers, `-H` includes filenames, and `-F` treats the search term as plain text. `"$1"` is the first filename argument passed in;
-  # `"${@:2}"` means all arguments starting with the second, which are the filenames.
-  # `result=$?` saves `grep`’s exit code: `0` means it found a match, `1` means no match, and a larger value means an error.
-  # `test "$result" -eq 1` succeeds only when `grep` found no match.
-  # Since that’s the last command, its result becomes the script’s exit code—and pre-commit’s pass/fail signal.
-  entry: bash -c 'grep -nHF "$1" "${@:2}"; result=$?; test "$result" -eq 1' -- '$6$'
+  # Search files for each literal marker, printing matching filenames and line numbers.
+  entry: bash -c 'grep -nHF -e "$1" -e "$2" -e "$3" -e "$4" -e "$5" -e "$6" "${@:7}"; result=$?; test "$result" -eq 1' -- '$1$' '$5$' '$6$' '$2a$' '$2b$' '$7$'
   exclude: ^\.pre-commit-config\.yaml$

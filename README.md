@@ -1,5 +1,11 @@
-# Detect out of date SHA512 hassword hashes
+# Detect out-of-date password hashes
 
-This pre-commit check just detects the presense of the string '$6$' which might indicate a mkmasswd result using an older password hashing algorithm.  Prefer yescript's '$y$ instead.
+This pre-commit check detects password hashes that use older algorithms, prefer to use yescrypt's `$y$` hashes instead.
 
-TODO: add more old hash types
+It flags hashes containing any of these markers:
+
+- `$1$` (MD5)
+- `$5$` (SHA-256)
+- `$6$` (SHA-512)
+- `$2a$` and `$2b$` (bcrypt)
+- `$7$` (scrypt)
